@@ -1,6 +1,6 @@
 ﻿using Library.Domain.Interfaces;
 
-namespace Library.Domain.Interfaces
+namespace Library.Application.Interfaces.Repositories
 {
 	public interface IRepository<T> where T : class, IEntity
 	{
