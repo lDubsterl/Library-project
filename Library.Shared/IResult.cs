@@ -14,8 +14,6 @@ namespace Library.Shared
 
 		T Data { get; set; }
 
-		//List<ValidationResult> ValidationErrors { get; set; }
-
 		Exception Exception { get; set; }
 
 		int Code { get; set; }

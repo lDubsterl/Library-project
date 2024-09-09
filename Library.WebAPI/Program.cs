@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Library.Infrastructure;
 
 namespace Library.WebAPI
 {
@@ -13,6 +16,20 @@ namespace Library.WebAPI
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+			builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(options =>
+				{
+					options.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidateIssuer = true,
+						ValidateAudience = true,
+						ValidateIssuerSigningKey = true,
+						ValidIssuer = TokenBuilder.Issuer,
+						ValidAudience = TokenBuilder.Audience,
+						IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(TokenBuilder.Secret))
+					};
+				});
+			builder.Services.AddAuthorization();
 
 			var app = builder.Build();
 
@@ -25,8 +42,9 @@ namespace Library.WebAPI
 
 			app.UseHttpsRedirection();
 
-			app.UseAuthorization();
+			app.UseAuthentication();
 
+			app.UseAuthorization();
 
 			app.MapControllers();
 
