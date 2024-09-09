@@ -1,21 +1,19 @@
 ﻿using AutoMapper;
+using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
-using Library.Domain.Interfaces;
-using Library.Shared;
+using Library.Shared.Results;
 using MediatR;
 
 namespace Library.Application.Features.Authors.Queries
 {
-	internal class GetAllAuthorsQuery : IRequest<Result<List<Author>>> { }
+    internal class GetAllAuthorsQuery : IRequest<Result<List<Author>>> { }
 	internal class GetAllAuthorsQueryHandler : IRequestHandler<GetAllAuthorsQuery, Result<List<Author>>>
 	{
 		IUnitOfWork _unitOfWork;
-		IMapper _mapper;
 
-		public GetAllAuthorsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+		public GetAllAuthorsQueryHandler(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
-			_mapper = mapper;
 		}
 
 		public async Task<Result<List<Author>>> Handle(GetAllAuthorsQuery query, CancellationToken cancellationToken)

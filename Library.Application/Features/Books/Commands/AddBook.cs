@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Library.Domain.Entities;
-using Library.Domain.Interfaces;
 using MediatR;
-using Library.Shared;
+using Library.Application.Interfaces.Repositories;
+using Library.Shared.Results;
 
 namespace Library.Application.Features.Books.Commands
 {
-	internal class AddBookCommand : Book, IRequest<Result<int>> { }
+    internal class AddBookCommand : Book, IRequest<Result<int>> { }
 	internal class AddBookHandler : IRequestHandler<AddBookCommand, Result<int>>
 	{
 		private IUnitOfWork _unitOfWork;
@@ -22,7 +22,7 @@ namespace Library.Application.Features.Books.Commands
 			var book = _mapper.Map<Book>(request);
 			_unitOfWork.Repository<Book>().Add(book);
 			await _unitOfWork.Save();
-			return Result<int>.Success($"{book.Title} was added successfully");
+			return await Result<int>.SuccessAsync($"{book.Title} was added successfully");
 		}
 	}
 }

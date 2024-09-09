@@ -1,6 +1,6 @@
 ﻿using Library.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Library.Domain.Interfaces;
+using Library.Application.Interfaces.Repositories;
 
 namespace Library.Persistence.Repositories
 {

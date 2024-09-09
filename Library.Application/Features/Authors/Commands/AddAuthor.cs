@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
+using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
-using Library.Domain.Interfaces;
-using Library.Shared;
+using Library.Shared.Results;
 using MediatR;
 
 namespace Library.Application.Features.Authors.Commands
 {
-	internal class AddAuthorCommand: IRequest<Result<int>>
+    internal class AddAuthorCommand: IRequest<Result<int>>
 	{
 	}
 	internal class AddAuthorHandler
@@ -19,7 +19,7 @@ namespace Library.Application.Features.Authors.Commands
 			_mapper = mapper;
 		}
 
-		public async Task<Result<int>> Handle(AddAuthorCommand request, CancellationToken cancellationToken)
+		public async Task<Result<int>> Handle(AddAuthorCommand request)
 		{
 			var author = _mapper.Map<Author>(request);
 			_unitOfWork.Repository<Author>().Add(author);

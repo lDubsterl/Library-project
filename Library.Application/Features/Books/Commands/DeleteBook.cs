@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
+using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
-using Library.Domain.Interfaces;
-using Library.Shared;
+using Library.Shared.Results;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Library.Application.Features.Books.Commands
 {
-	internal class DeleteBookCommand : Book, IRequest<Result<int>> { }
+    internal class DeleteBookCommand : Book, IRequest<Result<int>> { }
 	internal class DeleteBookHandler : IRequestHandler<DeleteBookCommand, Result<int>>
 	{
 		private IUnitOfWork _unitOfWork;
@@ -26,7 +21,7 @@ namespace Library.Application.Features.Books.Commands
 		{
 			var book = _mapper.Map<Book>(request);
 			await _unitOfWork.Repository<Book>().DeleteAsync(book);
-			return Result<int>.Success($"{book.Title} was deleted successfully");
+			return await Result<int>.SuccessAsync($"{book.Title} was deleted successfully");
 		}
 	}
 }

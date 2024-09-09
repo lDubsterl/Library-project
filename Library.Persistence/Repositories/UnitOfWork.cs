@@ -1,4 +1,4 @@
-﻿using Library.Domain.Entities;
+﻿using Library.Application.Interfaces.Repositories;
 using Library.Domain.Interfaces;
 using Library.Persistence.Contexts;
 using System.Collections;
@@ -7,9 +7,9 @@ namespace Library.Persistence.Repositories
 {
 	internal class UnitOfWork : IUnitOfWork
 	{
-		private ApplicationDbContext _context;
+		private LibraryDbContext _context;
 		private Hashtable _repositories;
-		public UnitOfWork(ApplicationDbContext context)
+		public UnitOfWork(LibraryDbContext context)
 		{
 			_context = context;
 			if (_repositories == null)

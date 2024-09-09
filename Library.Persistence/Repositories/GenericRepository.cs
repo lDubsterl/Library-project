@@ -1,4 +1,5 @@
-﻿using Library.Domain.Interfaces;
+﻿using Library.Application.Interfaces.Repositories;
+using Library.Domain.Interfaces;
 using Library.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,10 +7,10 @@ namespace Library.Persistence.Repositories
 {
 	internal class GenericRepository<T> : IRepository<T> where T : class, IEntity
 	{
-		private readonly ApplicationDbContext _dbContext;
+		private readonly LibraryDbContext _dbContext;
 		public IQueryable<T> Entities => _dbContext.Set<T>();
 
-		public GenericRepository(ApplicationDbContext dbContext)
+		public GenericRepository(LibraryDbContext dbContext)
 		{
 			_dbContext = dbContext;
 		}

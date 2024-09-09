@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
+using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
-using Library.Domain.Interfaces;
-using Library.Shared;
+using Library.Shared.Results;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Library.Application.Features.Books.Queries
 {
-	internal class GetBookByIdQuery : IRequest<Result<Book>>
+    internal class GetBookByIdQuery : IRequest<Result<Book>>
 	{
 		public GetBookByIdQuery(int id)
 		{
