@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Library.Domain.Entities;
-using Library.Domain.Interfaces.Repositories;
+using Library.Domain.Interfaces;
 using Library.Shared;
 using MediatR;
 using System;
