@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.Persistence.Contexts
 {
-    public class ApplicationDbContext: DbContext
+    public class LibraryDbContext: DbContext
     {
         public DbSet<Book> Books => Set<Book>();
         public DbSet<Author> Authors => Set<Author>();
-
-        ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+        public DbSet<User> Users => Set<User>();
+        LibraryDbContext(DbContextOptions<LibraryDbContext> options)
         {
             Database.EnsureCreated();
         }
