@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Library.Shared\Library.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Authentication\" />
+  </ItemGroup>
+
 </Project>
