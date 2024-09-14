@@ -26,7 +26,7 @@ namespace Library.Persistence.Repositories
 			return Task.CompletedTask;
 		}
 
-		public async Task<List<T>> GetAllAsync()
+		public async Task<IEnumerable<T>> GetAllAsync()
 		{
 			return await _dbContext.Set<T>().ToListAsync();
 		}

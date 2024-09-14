@@ -18,11 +18,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.WebAPI", "Library.WebAPI\Library.WebAPI.csproj", "{FC69BA19-5F7B-453F-8D99-5E6AB0FAB182}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9DCE0547-CA1C-49BB-82FA-1477F53F916E} = {9DCE0547-CA1C-49BB-82FA-1477F53F916E}
+		{CCC68B8B-8392-48ED-8350-25A9574B04CE} = {CCC68B8B-8392-48ED-8350-25A9574B04CE}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Shared", "Library.Shared\Library.Shared.csproj", "{08AF98D4-C0A3-4D0B-9BF8-5EBB073CBD70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Infrastructure", "Library.Infrastructure\Library.Infrastructure.csproj", "{9DCE0547-CA1C-49BB-82FA-1477F53F916E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Infrastructure", "Library.Infrastructure\Library.Infrastructure.csproj", "{9DCE0547-CA1C-49BB-82FA-1477F53F916E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

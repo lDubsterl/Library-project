@@ -1,6 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Library.Infrastructure;
+using Library.Application.Interfaces.Services;
+using Library.Infrastructure.Services;
+using Library.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
+using MediatR;
+using Library.Application.Extensions;
+using Library.Infrastructure.Extensions;
+using Library.Persistence.Extensions;
 
 namespace Library.WebAPI
 {
@@ -16,6 +24,11 @@ namespace Library.WebAPI
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+
+			builder.Services.AddApplicationLayer();
+			builder.Services.AddInfrastructureLayer();
+			builder.Services.AddPersistenceLayer(builder.Configuration);
+
 			builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 				.AddJwtBearer(options =>
 				{
@@ -29,7 +42,10 @@ namespace Library.WebAPI
 						IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(TokenBuilder.Secret))
 					};
 				});
-			builder.Services.AddAuthorization();
+			builder.Services.AddAuthorizationBuilder()
+				.AddPolicy("AdminsOnly", policy =>
+			policy.RequireRole("Admin"));
+
 
 			var app = builder.Build();
 

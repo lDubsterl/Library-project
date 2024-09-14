@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Library.Shared.Results
 {
-    internal class PaginatedResult<T> : Result<T>
+    public class PaginatedResult<T> : Result<T>
     {
         public PaginatedResult(List<T> data)
         {
