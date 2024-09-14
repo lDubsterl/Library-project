@@ -6,13 +6,9 @@ using MediatR;
 
 namespace Library.Application.Features.Books.Queries
 {
-    internal class GetBookByIdQuery : IRequest<Result<Book>>
+    internal class GetBookByIdQuery(int id) : IRequest<Result<Book>>
 	{
-		public GetBookByIdQuery(int id)
-		{
-			Id = id;
-		}
-		public int Id { get; set; }
+		public int Id { get; set; } = id;
 	}
 
 	internal class GetBookByIdQueryHandler : IRequestHandler<GetBookByIdQuery, Result<Book>>

@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Library.Application.Interfaces.Repositories;
+using Library.Domain.BaseEntities;
 using Library.Domain.Entities;
 using Library.Shared.Results;
 using MediatR;
 
 namespace Library.Application.Features.Books.Commands
 {
-    internal class EditBookCommand : Book, IRequest<Result<int>> { }
+    internal class EditBookCommand : BaseBook, IRequest<Result<int>> { }
 	internal class EditBookHandler : IRequestHandler<EditBookCommand, Result<int>>
 	{
 		private IUnitOfWork _unitOfWork;

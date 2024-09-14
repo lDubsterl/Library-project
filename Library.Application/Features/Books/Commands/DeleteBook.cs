@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Library.Application.Interfaces.Repositories;
+using Library.Domain.BaseEntities;
 using Library.Domain.Entities;
 using Library.Shared.Results;
 using MediatR;
 
 namespace Library.Application.Features.Books.Commands
 {
-    internal class DeleteBookCommand : Book, IRequest<Result<int>> { }
+    internal class DeleteBookCommand : BaseBook, IRequest<Result<int>> { }
 	internal class DeleteBookHandler : IRequestHandler<DeleteBookCommand, Result<int>>
 	{
 		private IUnitOfWork _unitOfWork;

@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using Library.Application.Interfaces.Repositories;
+using Library.Domain.BaseEntities;
 using Library.Domain.Entities;
 using Library.Shared.Results;
 using MediatR;
 
 namespace Library.Application.Features.Authors.Commands
 {
-    internal class DeleteAuthorCommand : Author, IRequest<Result<int>> { }
+	internal class DeleteAuthorCommand : BaseAuthor, IRequest<Result<int>>
+	{
+	}
 	internal class DeleteAuthorHandler : IRequestHandler<DeleteAuthorCommand, Result<int>>
 	{
 		private IUnitOfWork _unitOfWork;

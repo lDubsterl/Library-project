@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using Library.Application.Interfaces.Repositories;
+using Library.Domain.BaseEntities;
 using Library.Domain.Entities;
 using Library.Shared.Results;
 using MediatR;
 
 namespace Library.Application.Features.Authors.Commands
 {
-    internal class EditAuthorCommand : Author, IRequest<Result<int>> { }
+	internal class EditAuthorCommand : BaseAuthor, IRequest<Result<int>>
+	{
+	}
 	internal class EditAuthorHandler : IRequestHandler<EditAuthorCommand, Result<int>>
 	{
 		private IUnitOfWork _unitOfWork;

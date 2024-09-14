@@ -3,6 +3,7 @@ using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
 using Library.Shared.Results;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Application.Features.Authors.Queries
 {
@@ -16,19 +17,19 @@ namespace Library.Application.Features.Authors.Queries
 	}
 	internal class GetAllBooksByAuthorHandler: IRequestHandler<GetAllBooksByAuthor, Result<List<Book>?>>
 	{
-		IAuthorsRepository _repository;
-		IMapper _mapper;
+		IUnitOfWork _unitOfWork;
 
-		public GetAllBooksByAuthorHandler(IAuthorsRepository repository, IMapper mapper)
+		public GetAllBooksByAuthorHandler(IUnitOfWork unitOfWork, IMapper mapper)
 		{
-			_repository = repository;
-			_mapper = mapper;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<Result<List<Book>?>> Handle(GetAllBooksByAuthor query, CancellationToken cancellationToken)
 		{
-			var books = await _repository.GetBooksByAuthor(query.Id);
-			return await Result<List<Book>?>.SuccessAsync(books);
+			var author = await _unitOfWork.Repository<Author>().Entities
+				.Where(a => a.Id == query.Id)
+				.FirstOrDefaultAsync();
+			return await Result<List<Book>?>.SuccessAsync(author?.Books.ToList(), "Books were got successfully");
 		}
 	}
 }

@@ -3,10 +3,11 @@ using Library.Domain.Entities;
 using MediatR;
 using Library.Application.Interfaces.Repositories;
 using Library.Shared.Results;
+using Library.Domain.BaseEntities;
 
 namespace Library.Application.Features.Books.Commands
 {
-    internal class AddBookCommand : Book, IRequest<Result<int>> { }
+    internal class AddBookCommand : BaseBook, IRequest<Result<int>> { }
 	internal class AddBookHandler : IRequestHandler<AddBookCommand, Result<int>>
 	{
 		private IUnitOfWork _unitOfWork;
