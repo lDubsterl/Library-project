@@ -18,24 +18,24 @@ namespace Library.Infrastructure.Services
 			this.tokenService = tokenService;
 		}
 
-		public async Task<Result<Tuple<string, string>>> LoginAsync(LoginRequest loginRequest)
+		public async Task<Result<Tokens>> LoginAsync(LoginRequest loginRequest)
 		{
 			var user = _db.Users.SingleOrDefault(user => user.Email == loginRequest.Email);
 
 			if (user == null)
 			{
-				return await Result<Tuple<string, string>>.FailureAsync("Email not found");
+				return await Result<Tokens>.FailureAsync("Email not found");
 			}
 			var passwordHash = PasswordBuilder.HashUsingPbkdf2(loginRequest.Password, Convert.FromBase64String(user.PasswordSalt));
 
 			if (user.Password != passwordHash)
 			{
-				return await Result<Tuple<string, string>>.FailureAsync("Invalid password");
+				return await Result<Tokens>.FailureAsync("Invalid password");
 			}
 
 			var token = await Task.Run(() => tokenService.GenerateTokensAsync(user.Id));
 
-			return Result<Tuple<string, string>>.Success(token!);
+			return await Result<Tokens>.SuccessAsync(token!, "Tokens were got successfully");
 		}
 
 		public async Task<Result<bool>> LogoutAsync(int userId)
@@ -87,7 +87,8 @@ namespace Library.Infrastructure.Services
 				Email = signupRequest.Email,
 				Password = passwordHash,
 				PasswordSalt = Convert.ToBase64String(salt),
-				Ts = signupRequest.Ts
+				Ts = signupRequest.Ts,
+				Role = signupRequest.Role,
 			};
 
 			await _db.Users.AddAsync(user);
@@ -96,7 +97,7 @@ namespace Library.Infrastructure.Services
 
 			if (saveResponse >= 0)
 			{
-				return await Result<string>.SuccessAsync(user.Email);
+				return await Result<string>.SuccessAsync(user.Email, "Registered successfully");
 			}
 			return await Result<string>.FailureAsync("Unable to save the user");
 		}

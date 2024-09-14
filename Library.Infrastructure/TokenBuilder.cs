@@ -14,13 +14,13 @@ namespace Library.Infrastructure
 	{
 		public const string Issuer = "LibraryAPI";
 		public const string Audience = "LibraryUser";
-		public const string Secret = "saujfhaclni67423o17typ239398I&^%B&^I0p98/,'d;fiйцщ378н3з09зщшщцуфрадфлцоург'";
-		public static async Task<string> GenerateAccessToken(int userId)
+		public const string Secret = "saujfhaclni67423o17typ239398IBI0p98/dfiksued63qw4kwgqsbewufyssdf";
+		public static async Task<string> GenerateAccessToken(int userId, string role)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 
 			var key = Convert.FromBase64String(Secret);
-			var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, userId.ToString())]);
+			var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, userId.ToString()), new Claim(ClaimTypes.Role, role)]);
 			var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
 
 			var tokenDescriptor = new SecurityTokenDescriptor

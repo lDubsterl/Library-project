@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.Infrastructure.Services
 {
-	internal class TokenService : ITokenService
+	public class TokenService : ITokenService
 	{
 		readonly LibraryDbContext _db;
 
@@ -16,17 +16,17 @@ namespace Library.Infrastructure.Services
 			_db = db;
 		}
 
-		public async Task<Tuple<string, string>?> GenerateTokensAsync(int userId)
+		public async Task<Tokens> GenerateTokensAsync(int userId)
 		{
-			var accessToken = await TokenBuilder.GenerateAccessToken(userId);
-			var refreshToken = await TokenBuilder.GenerateRefreshToken();
-
-			var userRecord = await _db.Users.Include(o => o.RefreshTokens).FirstOrDefaultAsync(e => e.Id == userId);
-
+			var userRecord = await _db.Users.Include(t => t.RefreshTokens).FirstOrDefaultAsync(u => u.Id == userId);
+			
 			if (userRecord == null)
 			{
 				return null;
 			}
+
+			var accessToken = await TokenBuilder.GenerateAccessToken(userId, userRecord.Role);
+			var refreshToken = await TokenBuilder.GenerateRefreshToken();
 
 			var salt = PasswordBuilder.GetSecureSalt();
 
@@ -49,7 +49,7 @@ namespace Library.Infrastructure.Services
 
 			await _db.SaveChangesAsync();
 
-			var token = (accessToken, refreshToken).ToTuple();
+			var token = new Tokens { AccessToken = accessToken, RefreshToken = refreshToken};
 
 			return token;
 		}

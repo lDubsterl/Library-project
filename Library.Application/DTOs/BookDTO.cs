@@ -1,18 +1,19 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Library.Application.Common.Mappings;
+using Library.Domain.BaseEntities;
+using Library.Domain.Entities;
 
 namespace Library.Application.DTOs
 {
-	public class BookDTO: IRequest
+	public class BookDTO : BaseBook, IMapFromSpecific, IMapFrom<Book>
 	{
-		public required string ISBN { get; set; }
-		public required string Title { get; set; }
-		public required string Genre { get; set; }
-		public required string Description { get; set; }
+		
 		public required string Author { get; set; }
+
+		public void SpecificMapping(Profile profile)
+		{
+			profile.CreateMap<Author, BookDTO>()
+				.ForMember(bd => bd.Author, b => b.MapFrom(s => $"{s.Surname} {s.Name}"));
+		}
 	}
 }

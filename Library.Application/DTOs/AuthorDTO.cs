@@ -1,16 +1,10 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Library.Application.Common.Mappings;
+using Library.Domain.BaseEntities;
+using Library.Domain.Entities;
 
 namespace Library.Application.DTOs
 {
-	internal class AuthorDTO: IRequest
+	public class AuthorDTO : BaseAuthor, IMapFrom<Author>
 	{
-		public required string Name { get; set; }
-		public required string Surname { get; set; }
-		public required DateOnly BirthDate { get; set; }
 	}
 }
