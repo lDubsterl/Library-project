@@ -6,7 +6,7 @@ namespace Library.Application.Interfaces.Repositories
 	{
 		public IQueryable<T> Entities { get; }
 		public Task<T?> GetByIdAsync(int id);
-		public Task<List<T>> GetAllAsync();
+		public Task<IEnumerable<T>> GetAllAsync();
 		public T Add(T entity);
 		public Task UpdateAsync(T entity);
 		public Task DeleteAsync(T entity);
