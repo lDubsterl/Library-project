@@ -1,16 +1,11 @@
 ﻿using Library.Application.Interfaces.Services;
-using Library.Domain.Requests;
+using Library.Domain.Common;
 using Library.Shared.Results;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Library.Application.Features.Authentication
 {
-	public class SignUpHandler: IRequestHandler<SignUpRequest, Result<string>>
+	public class SignUpHandler: IRequestHandler<SignUp, Result<string>>
 	{
 		IAuthenticationService _service;
 
@@ -19,7 +14,7 @@ namespace Library.Application.Features.Authentication
 			_service = service;
 		}
 
-		public async Task<Result<string>> Handle(SignUpRequest request, CancellationToken cancellationToken)
+		public async Task<Result<string>> Handle(SignUp request, CancellationToken cancellationToken)
 		{
 			var signupResponse = await _service.SignUpAsync(request);
 
