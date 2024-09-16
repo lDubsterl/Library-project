@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.Persistence.Repositories
 {
-	internal class GenericRepository<T> : IRepository<T> where T : class, IEntity
+	public class GenericRepository<T> : IRepository<T> where T : class, IEntity
 	{
 		private readonly LibraryDbContext _dbContext;
 		public IQueryable<T> Entities => _dbContext.Set<T>();
@@ -22,6 +22,9 @@ namespace Library.Persistence.Repositories
 
 		public Task DeleteAsync(T entity)
 		{
+			T? exists = _dbContext.Set<T>().Find(entity.Id);
+			if (exists != null)
+				_dbContext.Entry(exists).State = EntityState.Detached;
 			_dbContext.Set<T>().Remove(entity);
 			return Task.CompletedTask;
 		}

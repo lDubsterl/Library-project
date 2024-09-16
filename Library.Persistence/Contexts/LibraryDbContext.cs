@@ -9,6 +9,7 @@ namespace Library.Persistence.Contexts
         public DbSet<Author> Authors => Set<Author>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public DbSet<User> Users => Set<User>();
+        public DbSet<UserBook> UserBooks => Set<UserBook>();
         public LibraryDbContext(DbContextOptions<LibraryDbContext> options): base(options)
         {
             Database.EnsureCreated();

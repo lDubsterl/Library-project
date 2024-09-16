@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Library.Persistence.Repositories
 {
-	internal class UnitOfWork : IUnitOfWork
+	public class UnitOfWork : IUnitOfWork
 	{
 		private LibraryDbContext _context;
 		private Hashtable _repositories;
@@ -13,7 +13,7 @@ namespace Library.Persistence.Repositories
 		{
 			_context = context;
 			if (_repositories == null)
-				_repositories = new Hashtable();
+				_repositories = [];
 		}
 
 		public IRepository<T> Repository<T>() where T : class, IEntity
