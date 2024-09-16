@@ -1,6 +1,6 @@
 ﻿using Library.Application.Interfaces.Services;
+using Library.Domain.Common;
 using Library.Domain.Entities;
-using Library.Domain.Requests;
 using Library.Persistence.Contexts;
 using Library.Shared.Results;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ namespace Library.Infrastructure.Services
 			this.tokenService = tokenService;
 		}
 
-		public async Task<Result<Tokens>> LoginAsync(LoginRequest loginRequest)
+		public async Task<Result<Tokens>> LoginAsync(Login loginRequest)
 		{
 			var user = _db.Users.SingleOrDefault(user => user.Email == loginRequest.Email);
 
@@ -60,7 +60,7 @@ namespace Library.Infrastructure.Services
 
 		}
 
-		public async Task<Result<string>> SignUpAsync(SignUpRequest signupRequest)
+		public async Task<Result<string>> SignUpAsync(SignUp signupRequest)
 		{
 			var existingUser = await _db.Users.SingleOrDefaultAsync(user => user.Email == signupRequest.Email);
 

@@ -1,9 +1,11 @@
-﻿using Library.Application.Interfaces.Services;
+﻿using Library.Application.DTOs;
+using Library.Application.Interfaces.Services;
+using Library.Domain.Common;
 using Library.Domain.Entities;
-using Library.Domain.Requests;
 using Library.Persistence.Contexts;
 using Library.Shared.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Library.Infrastructure.Services
 {
@@ -16,14 +18,23 @@ namespace Library.Infrastructure.Services
 			_db = db;
 		}
 
-		public async Task<Tokens> GenerateTokensAsync(int userId)
+		public async Task<string> GenerateAccessTokenAsync(int userId)
 		{
-			var userRecord = await _db.Users.Include(t => t.RefreshTokens).FirstOrDefaultAsync(u => u.Id == userId);
+			var userRecord = await _db.Users.Include(t => t.RefreshTokens).SingleAsync(u => u.Id == userId);
 			
 			if (userRecord == null)
-			{
 				return null;
-			}
+
+			var accessToken = await TokenBuilder.GenerateAccessToken(userId, userRecord.Role);
+			return accessToken;
+		}
+
+		public async Task<Tokens> GenerateTokensAsync(int userId)
+		{
+			var userRecord = await _db.Users.Include(t => t.RefreshTokens).SingleAsync(u => u.Id == userId);
+
+			if (userRecord == null)
+				return null;
 
 			var accessToken = await TokenBuilder.GenerateAccessToken(userId, userRecord.Role);
 			var refreshToken = await TokenBuilder.GenerateRefreshToken();
@@ -49,7 +60,7 @@ namespace Library.Infrastructure.Services
 
 			await _db.SaveChangesAsync();
 
-			var token = new Tokens { AccessToken = accessToken, RefreshToken = refreshToken};
+			var token = new Tokens { AccessToken = accessToken, RefreshToken = refreshToken };
 
 			return token;
 		}
@@ -73,41 +84,22 @@ namespace Library.Infrastructure.Services
 			return false;
 		}
 
-		public async Task<Result<int>> ValidateRefreshTokenAsync(RefreshTokenRequest refreshTokenRequest)
+		public async Task<Result<int>> ValidateRefreshTokenAsync(TokenDTO refreshTokenRequest)
 		{
 			var refreshToken = await _db.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == refreshTokenRequest.UserId);
 
-			var response = new Result<int>();
 			if (refreshToken == null)
-			{
-				response.Succeeded = false;
-				response.Messages.Add("Invalid session or user is already logged out");
-				response.Code = 401;
-				return response;
-			}
+				return await Result<int>.FailureAsync("Invalid session or user is already logged out");
 
-			var refreshTokenToValidateHash = PasswordBuilder.HashUsingPbkdf2(refreshTokenRequest.RefreshToken, Convert.FromBase64String(refreshToken.TokenSalt));
+			var refreshTokenToValidateHash = PasswordBuilder.HashUsingPbkdf2(refreshTokenRequest.Token, Convert.FromBase64String(refreshToken.TokenSalt));
 
 			if (refreshToken.TokenHash != refreshTokenToValidateHash)
-			{
-				response.Succeeded = false;
-				response.Messages.Add("Invalid refresh token");
-				response.Code = 401;
-				return response;
-			}
+				return await Result<int>.FailureAsync("Invalid refresh token");
 
 			if (refreshToken.ExpiryDate < DateTime.UtcNow)
-			{
-				response.Succeeded = false;
-				response.Messages.Add("Refresh token has expired");
-				response.Code = 401;
-				return response;
-			}
+				return await Result<int>.FailureAsync("Refresh token has expired");
 
-			response.Succeeded = true;
-			response.Data = refreshToken.UserId;
-
-			return response;
+			return await Result<int>.SuccessAsync(refreshToken.UserId);
 		}
 	}
 }

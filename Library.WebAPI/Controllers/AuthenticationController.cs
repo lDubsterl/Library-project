@@ -1,6 +1,6 @@
-﻿using Library.Application.Features.Authentication;
-using Library.Domain.Entities;
-using Library.Domain.Requests;
+﻿using Library.Application.DTOs;
+using Library.Application.Features.Authentication;
+using Library.Domain.Common;
 using Library.Shared.Results;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,19 +21,19 @@ namespace Library.WebAPI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<Result<Tokens>> Login(LoginRequest request)
+		public async Task<Result<Tokens>> LogIn(Login request)
 		{
 			return await _mediator.Send(request);
 		}
 
 		[HttpPost]
-		public async Task<Result<string>> SignUp(SignUpRequest request)
+		public async Task<Result<string>> SignUp(SignUp request)
 		{
 			return await _mediator.Send(request);
 		}
 
 		[HttpPost]
-		public async Task<Result<Tokens>> RefreshToken(RefreshTokenRequest request)
+		public async Task<Result<string>> GetNewAccessToken(AccessToken request)
 		{
 			return await _mediator.Send(request);
 		}
