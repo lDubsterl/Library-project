@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
-using Library.Application.DTOs;
+using Library.Application.Features.Authors.Commands;
 using Library.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Library.Application.Common.Mappings
 {
-	public class MappingProfile: Profile
+	public class MappingProfile : Profile
 	{
 		public MappingProfile()
 		{
@@ -19,11 +14,17 @@ namespace Library.Application.Common.Mappings
 
 		private void ApplyMappingsFromAssembly(Assembly assembly)
 		{
-			var mapFromType = typeof(IMapFrom<>);
+			var mapTypes = new Type[] { typeof(IMapFrom<>), typeof(IMapTo<>) };
 
 			var mappingMethodName = nameof(IMapFrom<object>.Mapping);
 
-			bool HasInterface(Type t) => t.IsGenericType && t.GetGenericTypeDefinition() == mapFromType;
+			bool HasInterface(Type t)
+			{
+				foreach (var mapType in mapTypes)
+					if (t.IsGenericType && t.GetGenericTypeDefinition() == mapType)
+						return true;
+				return false;
+			}
 
 			var types = assembly.GetExportedTypes().Where(t => t.GetInterfaces().Any(HasInterface)).ToList();
 

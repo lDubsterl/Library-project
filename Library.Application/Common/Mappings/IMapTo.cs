@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Library.Application.Common.Mappings
 {
-	public interface IMapFrom<T>
+	public interface IMapTo<T>
 	{
-		public void Mapping(Profile profile) => profile.CreateMap(typeof(T), GetType());
+		public void Mapping(Profile profile) => profile.CreateMap(GetType(), typeof(T));
 	}
 }
