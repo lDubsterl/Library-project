@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Library.Application.DTOs;
+using Library.Application.Common.BaseClasses;
 
 namespace Library.Application.Features.Validators
 {
@@ -7,9 +7,9 @@ namespace Library.Application.Features.Validators
     {
         public PaginationValidator()
         {
-            RuleFor(e => e.PageNumber).LessThanOrEqualTo(1)
+            RuleFor(e => e.PageNumber).GreaterThanOrEqualTo(1)
                 .WithMessage("Page number should be at least greater than or equal to 1.");
-            RuleFor(e => e.PageSize).LessThanOrEqualTo(1)
+            RuleFor(e => e.PageSize).GreaterThanOrEqualTo(1)
                 .WithMessage("Page size should be at least greater than or equal to 1.");
         }
     }
