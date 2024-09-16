@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Application.DTOs;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
 using Library.Shared.Results;
@@ -6,30 +7,31 @@ using MediatR;
 
 namespace Library.Application.Features.Authors.Queries
 {
-    internal class GetAuthorByIdQuery : IRequest<Result<Author>>
+    public class GetAuthorById : IRequest<Result<AuthorDTO>>
 	{
-		public GetAuthorByIdQuery(int id)
+		public GetAuthorById(int id)
 		{
 			Id = id;
 		}
 		public int Id { get; set; }
 	}
 
-	internal class GetAuthorByIdQueryHandler : IRequestHandler<GetAuthorByIdQuery, Result<Author>>
+	public class GetAuthorByIdHandler : IRequestHandler<GetAuthorById, Result<AuthorDTO>>
 	{
 		IUnitOfWork _unitOfWork;
 		IMapper _mapper;
 
-		public GetAuthorByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+		public GetAuthorByIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
 			_mapper = mapper;
 		}
 
-		public async Task<Result<Author>> Handle(GetAuthorByIdQuery query, CancellationToken cancellationToken)
+		public async Task<Result<AuthorDTO>> Handle(GetAuthorById query, CancellationToken cancellationToken)
 		{
 			var author = await _unitOfWork.Repository<Author>().GetByIdAsync(query.Id);
-			return await Result<Author>.SuccessAsync(author!);
+			var mappedAuthor = _mapper.Map<AuthorDTO>(author);
+			return await Result<AuthorDTO>.SuccessAsync(mappedAuthor);
 		}
 	}
 }

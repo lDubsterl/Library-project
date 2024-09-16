@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Application.Common.BaseClasses;
 using Library.Application.DTOs;
 using Library.Application.Extensions;
 using Library.Application.Interfaces.Repositories;
@@ -9,25 +10,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.Application.Features.Authors.Queries
 {
-	public class GetBooksByAuthorWithPagination(int pageNumber, int pageSize, int authorId) : PaginationBase(pageNumber, pageSize), IRequest<PaginatedResult<Book>>
+    public class GetBooksByAuthorWithPagination : PaginationBase, IRequest<Result<BookDTO>>
 	{
-		public int AuthorId { get; set; } = authorId;
+		public int AuthorId { get; set; }
 	}
-	public class GetBooksByAuthorWithPaginationHandler : IRequestHandler<GetBooksByAuthorWithPagination, PaginatedResult<Book>>
+	public class GetBooksByAuthorWithPaginationHandler : IRequestHandler<GetBooksByAuthorWithPagination, Result<BookDTO>>
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IMapper _mapper;
 
 		public GetBooksByAuthorWithPaginationHandler(IUnitOfWork unitOfWork, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
+			_mapper = mapper;
 		}
 
-		public async Task<PaginatedResult<Book>> Handle(GetBooksByAuthorWithPagination request, CancellationToken cancellationToken)
+		public async Task<Result<BookDTO>> Handle(GetBooksByAuthorWithPagination request, CancellationToken cancellationToken)
 		{
 			var author = await _unitOfWork.Repository<Author>().Entities
+				.Include(b => b.Books)
 				.Where(a => a.Id == request.AuthorId)
 				.SingleAsync();
-			return author.Books.ToPaginatedList(request.PageNumber, request.PageSize);
+
+			if (author is null)
+				return await Result<BookDTO>.FailureAsync("Author doesn't exist");
+
+			var books = author.Books?
+				.Select(_mapper.Map<BookDTO>)
+				.ToPaginatedList(request.PageNumber, request.PageSize);
+
+			return books;
 		}
 	}
 }

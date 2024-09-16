@@ -11,10 +11,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Library.Application.Common.BaseClasses;
 
 namespace Library.Application.Features.Authors.Queries
 {
-	public class GetAllAuthorsWithPagination(int pageSize, int pageNumber) : PaginationBase(pageSize, pageNumber), IRequest<PaginatedResult<AuthorDTO>>
+    public class GetAllAuthorsWithPagination : PaginationBase, IRequest<PaginatedResult<AuthorDTO>>
 	{
 	}
 

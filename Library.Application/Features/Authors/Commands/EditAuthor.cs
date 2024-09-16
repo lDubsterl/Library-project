@@ -1,16 +1,18 @@
 ﻿using AutoMapper;
+using Library.Application.Common.Mappings;
 using Library.Application.Interfaces.Repositories;
-using Library.Domain.BaseEntities;
+using Library.Domain.Common;
 using Library.Domain.Entities;
 using Library.Shared.Results;
 using MediatR;
 
 namespace Library.Application.Features.Authors.Commands
 {
-	internal class EditAuthorCommand : BaseAuthor, IRequest<Result<int>>
+	public class EditAuthorCommand : BaseAuthor, IRequest<Result<int>>, IMapTo<Author>
 	{
+		public int Id { get; set; }
 	}
-	internal class EditAuthorHandler : IRequestHandler<EditAuthorCommand, Result<int>>
+	public class EditAuthorHandler : IRequestHandler<EditAuthorCommand, Result<int>>
 	{
 		private IUnitOfWork _unitOfWork;
 		private IMapper _mapper;
@@ -22,9 +24,14 @@ namespace Library.Application.Features.Authors.Commands
 
 		public async Task<Result<int>> Handle(EditAuthorCommand request, CancellationToken cancellationToken)
 		{
-			var author = _mapper.Map<Author>(request);
-			await _unitOfWork.Repository<Author>().UpdateAsync(author);
-			return Result<int>.Success($"{author.Name} {author.Surname} was updated successfully");
+			var author = await _unitOfWork.Repository<Author>().GetByIdAsync(request.Id);
+			if (author is null)
+				return await Result<int>.FailureAsync("Author not found");
+
+			var newAuthor = _mapper.Map<Author>(request);
+			await _unitOfWork.Repository<Author>().UpdateAsync(newAuthor);
+			await _unitOfWork.Save();
+			return await Result<int>.SuccessAsync(request.Id, $"{newAuthor.Name} {newAuthor.Surname} was updated successfully");
 		}
 	}
 }

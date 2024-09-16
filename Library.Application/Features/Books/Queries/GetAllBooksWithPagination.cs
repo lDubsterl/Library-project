@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Library.Application.Common.BaseClasses;
 using Library.Application.DTOs;
 using Library.Application.Extensions;
 using Library.Application.Interfaces.Repositories;
@@ -9,7 +10,7 @@ using MediatR;
 
 namespace Library.Application.Features.Books.Queries
 {
-	public class GetAllBooksWithPagination(int pageNumber, int pageSize) : PaginationBase(pageNumber, pageSize), IRequest<PaginatedResult<BookDTO>>
+    public class GetAllBooksWithPagination : PaginationBase, IRequest<PaginatedResult<BookDTO>>
 	{
 	}
 	public class GetAllBooksHandler : IRequestHandler<GetAllBooksWithPagination, PaginatedResult<BookDTO>>

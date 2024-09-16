@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Library.Application.Common.BaseClasses;
 using Library.Application.DTOs;
 using Library.Application.Extensions;
 using Library.Application.Interfaces.Repositories;
@@ -15,9 +16,9 @@ using System.Threading.Tasks;
 
 namespace Library.Application.Features.Books.Queries
 {
-	public class GetUserBooksWithPagination(int id, int pageNumber, int pageSize) : PaginationBase(pageNumber, pageSize), IRequest<PaginatedResult<UserBookDTO>>
+    public class GetUserBooksWithPagination : PaginationBase, IRequest<PaginatedResult<UserBookDTO>>
 	{
-		public int Id = id;
+		public int Id {  get; set; }
 	}
 	public class GetUserBooksHandler : IRequestHandler<GetUserBooksWithPagination, PaginatedResult<UserBookDTO>>
 	{
@@ -36,7 +37,8 @@ namespace Library.Application.Features.Books.Queries
 				.Include(b => b.Book)
 				.ThenInclude(a => a.Author)
 				.Where(b => b.UserId == request.Id)
-				.ProjectTo<UserBookDTO>(_mapper.ConfigurationProvider).ToPaginatedListAsync(request.PageNumber, request.PageSize);
+				.ProjectTo<UserBookDTO>(_mapper.ConfigurationProvider)
+				.ToPaginatedListAsync(request.PageNumber, request.PageSize);
 		}
 	}
 }

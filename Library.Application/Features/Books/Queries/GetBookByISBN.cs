@@ -1,35 +1,36 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Library.Application.DTOs;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
 using Library.Shared.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Library.Application.Features.Books.Queries
 {
-    internal class GetBookByISBN(string isbn) : IRequest<Result<Book>>
+	public class GetBookByISBN : IRequest<Result<BookDTO>>
 	{
-		public string ISBN { get; set; } = isbn;
+		public string ISBN { get; set; }
 	}
 
-	internal class GetBookByISBNHandler : IRequestHandler<GetBookByISBN, Result<Book>>
+	public class GetBookByISBNHandler : IRequestHandler<GetBookByISBN, Result<BookDTO>>
 	{
 		IUnitOfWork _unitOfWork;
-
-		public GetBookByISBNHandler(IUnitOfWork unitOfWork)
+		IMapper _mapper;
+		public GetBookByISBNHandler(IUnitOfWork unitOfWork, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
+			_mapper = mapper;
 		}
 
-		public async Task<Result<Book>> Handle(GetBookByISBN query, CancellationToken cancellationToken)
+		public async Task<Result<BookDTO>> Handle(GetBookByISBN query, CancellationToken cancellationToken)
 		{
-			var book = await _unitOfWork.Repository<Book>().Entities.Where(b => b.ISBN == query.ISBN).FirstOrDefaultAsync();
-			return await Result<Book>.SuccessAsync(book!);
+			var book = await _unitOfWork.Repository<Book>().Entities
+				.Where(b => b.ISBN == query.ISBN)
+				.ProjectTo<BookDTO>(_mapper.ConfigurationProvider)
+				.SingleAsync();
+			return await Result<BookDTO>.SuccessAsync(book!);
 		}
 	}
 }
