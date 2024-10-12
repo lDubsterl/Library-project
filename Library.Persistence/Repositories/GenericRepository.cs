@@ -22,9 +22,6 @@ namespace Library.Persistence.Repositories
 
 		public Task DeleteAsync(T entity)
 		{
-			T? exists = _dbContext.Set<T>().Find(entity.Id);
-			if (exists != null)
-				_dbContext.Entry(exists).State = EntityState.Detached;
 			_dbContext.Set<T>().Remove(entity);
 			return Task.CompletedTask;
 		}
@@ -34,16 +31,14 @@ namespace Library.Persistence.Repositories
 			return await _dbContext.Set<T>().ToListAsync();
 		}
 
-		public async Task<T?> GetByIdAsync(int id)
+		public async Task<T> GetByIdAsync(int id)
 		{
-			return await _dbContext.Set<T>().FindAsync(id);
+			return (await _dbContext.Set<T>().FindAsync(id))!;
 		}
 
 		public Task UpdateAsync(T entity)
 		{
-			T? exists = _dbContext.Set<T>().Find(entity.Id);
-			if (exists != null)
-				_dbContext.Entry(exists).CurrentValues.SetValues(entity);
+			_dbContext.Update(entity);
 			return Task.CompletedTask;
 		}
 	}
