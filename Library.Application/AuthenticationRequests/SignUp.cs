@@ -1,7 +1,7 @@
 ﻿using Library.Shared.Results;
 using MediatR;
 
-namespace Library.Domain.Common
+namespace Library.Application.Requests
 {
 	public class SignUp: IRequest<Result<string>>
 	{

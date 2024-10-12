@@ -1,7 +1,8 @@
-﻿using Library.Shared.Results;
+﻿using Library.Domain.Common;
+using Library.Shared.Results;
 using MediatR;
 
-namespace Library.Domain.Common
+namespace Library.Application.Requests
 {
 	public class Login: IRequest<Result<Tokens>>
 	{
