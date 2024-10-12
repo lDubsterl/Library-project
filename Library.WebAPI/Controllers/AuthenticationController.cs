@@ -1,10 +1,7 @@
-﻿using Library.Application.DTOs;
-using Library.Application.Features.Authentication;
-using Library.Domain.Common;
+﻿using Library.Application.Features.Authentication;
+using Library.Application.Requests;
 using Library.Shared.Results;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.WebAPI.Controllers

@@ -1,6 +1,6 @@
 ﻿using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
-using Library.Domain.Common;
+using Library.Application.Requests;
 using Library.Shared.Results;
 using MediatR;
 

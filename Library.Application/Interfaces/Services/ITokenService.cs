@@ -1,5 +1,5 @@
 ﻿using Library.Application.DTOs;
-using Library.Domain.Common;
+using Library.Application.Requests;
 using Library.Domain.Entities;
 using Library.Shared.Results;
 

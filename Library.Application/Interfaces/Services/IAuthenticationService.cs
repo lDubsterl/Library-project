@@ -1,5 +1,5 @@
 ﻿using Library.Shared.Results;
-using Library.Domain.Common;
+using Library.Application.Requests;
 
 namespace Library.Application.Interfaces.Services
 {
