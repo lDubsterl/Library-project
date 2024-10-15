@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Library.Application.Common.BaseClasses;
 
-namespace Library.Application.Features.Validators
+namespace Library.Application.Common.Validators
 {
     public class PaginationValidator : AbstractValidator<PaginationBase>
     {

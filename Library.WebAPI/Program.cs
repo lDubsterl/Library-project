@@ -9,6 +9,9 @@ using MediatR;
 using Library.Application.Extensions;
 using Library.Infrastructure.Extensions;
 using Library.Persistence.Extensions;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Library.Application.Common.Exceptions;
 
 namespace Library.WebAPI
 {
@@ -42,10 +45,19 @@ namespace Library.WebAPI
 						IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(TokenBuilder.Secret))
 					};
 				});
+
 			builder.Services.AddAuthorizationBuilder()
 				.AddPolicy("AdminsOnly", policy =>
 			policy.RequireRole("Admin"));
 
+			builder.Services.AddCors(options =>
+			{
+				options.AddDefaultPolicy(builder =>
+					builder.AllowAnyOrigin()
+					.AllowAnyMethod()
+					.AllowAnyHeader()
+					);
+			});
 
 			var app = builder.Build();
 
@@ -56,6 +68,8 @@ namespace Library.WebAPI
 				app.UseSwaggerUI();
 			}
 
+			app.UseMiddleware<ExceptionMiddleware>();
+
 			app.UseHttpsRedirection();
 
 			app.UseAuthentication();
@@ -63,6 +77,8 @@ namespace Library.WebAPI
 			app.UseAuthorization();
 
 			app.MapControllers();
+
+			app.UseCors();
 
 			app.Run();
 		}

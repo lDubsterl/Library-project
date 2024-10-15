@@ -1,11 +1,11 @@
 ﻿using Library.Application.Interfaces.Services;
-using Library.Application.Requests;
 using Library.Shared.Results;
 using MediatR;
+using Library.Application.AuthenticationRequests;
 
 namespace Library.Application.Features.Authentication
 {
-	public class SignUpHandler: IRequestHandler<SignUp, Result<string>>
+    public class SignUpHandler: IRequestHandler<SignUp, Result<string>>
 	{
 		IAuthenticationService _service;
 

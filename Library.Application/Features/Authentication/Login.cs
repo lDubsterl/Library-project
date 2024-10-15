@@ -1,12 +1,12 @@
 ﻿using Library.Application.Interfaces.Services;
-using Library.Application.Requests;
 using Library.Shared.Results;
 using MediatR;
+using Library.Application.AuthenticationRequests;
 
 namespace Library.Application.Features.Authentication
 {
 
-	public class LoginHandler : IRequestHandler<Login, Result<Tokens>>
+    public class LoginHandler : IRequestHandler<Login, Result<Tokens>>
 	{
 		IAuthenticationService _service;
 		public LoginHandler(IAuthenticationService service)

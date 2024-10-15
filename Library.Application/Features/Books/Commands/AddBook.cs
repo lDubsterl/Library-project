@@ -6,12 +6,11 @@ using Library.Shared.Results;
 using Library.Domain.Common;
 using Library.Application.Common.Mappings;
 using Library.Application.DTOs;
-using Library.Application.Features.Authors.Commands;
-using Microsoft.EntityFrameworkCore;
+using Library.Application.Common.Validators;
 
 namespace Library.Application.Features.Books.Commands
 {
-	public class AddBookCommand : BaseBook, IRequest<Result<int>>, IMapTo<Book>, IMapTo<BookDTO>
+	public class AddBookCommand : BaseBook, IRequest<Result<int>>, IMapTo<Book>, IMapTo<BookDTO>, IToValidate
 	{
 		public AuthorDTO Author { get; set; }
 	}
@@ -24,7 +23,7 @@ namespace Library.Application.Features.Books.Commands
 			_unitOfWork = unitOfWork;
 			_mapper = mapper;
 		}
-		bool IsEqual(Book fromDb, AddBookCommand fromRequest) => _mapper.Map<BookDTO>(fromDb) == _mapper.Map<BookDTO>(fromRequest);
+		bool IsEqual(Book fromDb, AddBookCommand fromRequest) => _mapper.Map<BookDTO>(fromDb).Equals(_mapper.Map<BookDTO>(fromRequest));
 		public async Task<Result<int>> Handle(AddBookCommand request, CancellationToken cancellationToken)
 		{
 			var author = _unitOfWork.Repository<Author>().Entities
@@ -40,7 +39,7 @@ namespace Library.Application.Features.Books.Commands
 				.Any(a => IsEqual(a, request));
 
 			if (isBookExists)
-				return await Result<int>.FailureAsync("That book already exists");
+				return await Result<int>.FailureAsync("Book with this ISBN already exists");
 			
 			var book = _mapper.Map<Book>(request);
 			book.Author = author;

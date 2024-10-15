@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Library.Application.Common.Mappings;
+using Library.Application.Common.Validators;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Common;
 using Library.Domain.Entities;
@@ -8,7 +9,7 @@ using MediatR;
 
 namespace Library.Application.Features.Authors.Commands
 {
-	public class EditAuthorCommand : BaseAuthor, IRequest<Result<int>>, IMapTo<Author>
+	public class EditAuthorCommand : BaseAuthor, IRequest<Result<int>>, IMapTo<Author>, IToValidate
 	{
 		public int Id { get; set; }
 	}

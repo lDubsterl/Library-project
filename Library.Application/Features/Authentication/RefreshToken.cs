@@ -1,12 +1,12 @@
 ﻿using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
-using Library.Application.Requests;
 using Library.Shared.Results;
 using MediatR;
+using Library.Application.AuthenticationRequests;
 
 namespace Library.Application.Features.Authentication
 {
-	public class RefreshToken : TokenDTO, IRequest<Result<Tokens>> { }
+    public class RefreshToken : TokenDTO, IRequest<Result<Tokens>> { }
 	public class RefreshTokenHandler : IRequestHandler<RefreshToken, Result<Tokens>>
 	{
 		ITokenService _service;

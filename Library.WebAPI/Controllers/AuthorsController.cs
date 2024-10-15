@@ -1,15 +1,10 @@
 ﻿using Library.Application.DTOs;
 using Library.Application.Features.Authors.Commands;
 using Library.Application.Features.Authors.Queries;
-using Library.Application.Features.Books.Commands;
-using Library.Application.Features.Validators;
-using Library.Application.Validators;
 using Library.Shared.Results;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using GV = Library.Application.Features.Validators.GenericValidator;
 
 namespace Library.WebAPI.Controllers
 {
@@ -25,13 +20,9 @@ namespace Library.WebAPI.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<PaginatedResult<AuthorDTO>>> GetAllAuthors([FromQuery]GetAllAuthorsWithPagination query)
+		public async Task<ActionResult<PaginatedResult<AuthorDTO>>> GetAllAuthors([FromQuery] GetAllAuthorsWithPagination query)
 		{
-			var result = GV.ValidateQuery(typeof(PaginationValidator), query);
-			if (result is null)
-				return await _mediator.Send(query);
-			else
-				return BadRequest(result);
+			return await _mediator.Send(query);
 		}
 
 		[HttpGet]
@@ -41,33 +32,21 @@ namespace Library.WebAPI.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<Result<BookDTO>>> GetAllBooksByAuthor([FromQuery]GetBooksByAuthorWithPagination query)
+		public async Task<ActionResult<Result<BookDTO>>> GetAllBooksByAuthor([FromQuery] GetBooksByAuthorWithPagination query)
 		{
-			var result = GV.ValidateQuery(typeof(PaginationValidator), query);
-			if (result is null)
-				return await _mediator.Send(query);
-			else
-				return BadRequest(result);
+			return await _mediator.Send(query);
 		}
 
 		[HttpPost, Authorize(Policy = "AdminsOnly")]
 		public async Task<ActionResult<Result<int>>> AddAuthor(AddAuthorCommand query)
 		{
-			var result = GV.ValidateQuery(typeof(AuthorValidator), query);
-			if (result is null)
-				return await _mediator.Send(query);
-			else
-				return BadRequest(result);
+			return await _mediator.Send(query);
 		}
 
 		[HttpPut, Authorize(Policy = "AdminsOnly")]
 		public async Task<ActionResult<Result<int>>> EditAuthor(EditAuthorCommand query)
 		{
-			var result = GV.ValidateQuery(typeof(AuthorValidator), query);
-			if (result is null)
-				return await _mediator.Send(query);
-			else
-				return BadRequest(result);
+			return await _mediator.Send(query);
 		}
 
 		[HttpDelete, Authorize(Policy = "AdminsOnly")]

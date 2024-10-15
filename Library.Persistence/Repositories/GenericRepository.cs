@@ -22,6 +22,7 @@ namespace Library.Persistence.Repositories
 
 		public Task DeleteAsync(T entity)
 		{
+			_dbContext.Entry(entity).State = EntityState.Deleted;
 			_dbContext.Set<T>().Remove(entity);
 			return Task.CompletedTask;
 		}
@@ -38,6 +39,7 @@ namespace Library.Persistence.Repositories
 
 		public Task UpdateAsync(T entity)
 		{
+			_dbContext.Entry(entity).State = EntityState.Modified;
 			_dbContext.Update(entity);
 			return Task.CompletedTask;
 		}

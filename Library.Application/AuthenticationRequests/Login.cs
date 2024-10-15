@@ -2,11 +2,11 @@
 using Library.Shared.Results;
 using MediatR;
 
-namespace Library.Application.Requests
+namespace Library.Application.AuthenticationRequests
 {
-	public class Login: IRequest<Result<Tokens>>
-	{
-		public string Email {  get; set; }
-		public string Password { get; set; }
-	}
+    public class Login : IRequest<Result<Tokens>>
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 }

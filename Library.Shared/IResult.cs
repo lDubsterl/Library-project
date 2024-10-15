@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Library.Shared
 {
-	internal interface IResult<T>
+	public interface IResult<T>
 	{
 		List<string> Messages { get; set; }
 

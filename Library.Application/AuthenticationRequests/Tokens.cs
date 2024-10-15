@@ -1,8 +1,8 @@
-﻿namespace Library.Application.Requests
+﻿namespace Library.Application.AuthenticationRequests
 {
-	public class Tokens
-	{
-		public string? AccessToken { get; set; }
-		public string? RefreshToken { get; set; }
-	}
+    public class Tokens
+    {
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+    }
 }

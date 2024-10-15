@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Library.Application.Common.Mappings;
+using Library.Application.Common.Validators;
 using Library.Application.DTOs;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Common;
@@ -9,7 +10,7 @@ using MediatR;
 
 namespace Library.Application.Features.Books.Commands
 {
-	public class EditBookCommand : BaseBook, IRequest<Result<int>>, IMapTo<Book>
+	public class EditBookCommand : BaseBook, IRequest<Result<int>>, IMapTo<Book>, IToValidate
 	{
 		public int Id { get; set; }
 		public int AuthorId { get; set; }

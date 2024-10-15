@@ -1,5 +1,5 @@
-﻿using Library.Application.Interfaces.Services;
-using Library.Domain.Common;
+﻿using Library.Application.AuthenticationRequests;
+using Library.Application.Interfaces.Services;
 using Library.Domain.Entities;
 using Library.Persistence.Contexts;
 using Library.Shared.Results;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.Infrastructure.Services
 {
-	public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
 	{
 		private readonly LibraryDbContext _db;
 		private readonly ITokenService tokenService;
@@ -66,7 +66,7 @@ namespace Library.Infrastructure.Services
 
 			if (existingUser != null)
 			{
-				return await Result<string>.FailureAsync("User already exists with the same email");
+				return await Result<string>.FailureAsync("User with the same email already exists");
 			}
 
 			if (signupRequest.Password != signupRequest.ConfirmPassword)

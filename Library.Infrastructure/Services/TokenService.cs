@@ -1,15 +1,14 @@
-﻿using Library.Application.DTOs;
+﻿using Library.Application.AuthenticationRequests;
+using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
-using Library.Domain.Common;
 using Library.Domain.Entities;
 using Library.Persistence.Contexts;
 using Library.Shared.Results;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace Library.Infrastructure.Services
 {
-	public class TokenService : ITokenService
+    public class TokenService : ITokenService
 	{
 		readonly LibraryDbContext _db;
 

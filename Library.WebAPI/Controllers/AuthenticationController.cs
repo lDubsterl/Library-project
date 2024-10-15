@@ -1,12 +1,12 @@
-﻿using Library.Application.Features.Authentication;
-using Library.Application.Requests;
+﻿using Library.Application.AuthenticationRequests;
+using Library.Application.Features.Authentication;
 using Library.Shared.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.WebAPI.Controllers
 {
-	[Route("api/[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
 	[ApiController]
 	public class AuthenticationController : ApiBaseController
 	{

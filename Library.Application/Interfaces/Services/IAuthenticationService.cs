@@ -1,9 +1,9 @@
 ﻿using Library.Shared.Results;
-using Library.Application.Requests;
+using Library.Application.AuthenticationRequests;
 
 namespace Library.Application.Interfaces.Services
 {
-	public interface IAuthenticationService
+    public interface IAuthenticationService
 	{
 		Task<Result<Tokens>> LoginAsync(Login request);
 		Task<Result<string>> SignUpAsync(SignUp request);
