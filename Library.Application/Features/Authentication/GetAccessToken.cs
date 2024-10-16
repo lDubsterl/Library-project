@@ -5,8 +5,8 @@ using MediatR;
 
 namespace Library.Application.Features.Authentication
 {
-	public class AccessToken : TokenDTO, IRequest<Result<string>> { }
-	public class AccessTokenHandler : IRequestHandler<AccessToken, Result<string>>
+	public class GetAccessToken : TokenDTO, IRequest<Result<string>> { }
+	public class AccessTokenHandler : IRequestHandler<GetAccessToken, Result<string>>
 	{
 		readonly ITokenService _service;
 
@@ -15,7 +15,7 @@ namespace Library.Application.Features.Authentication
 			_service = service;
 		}
 
-		public async Task<Result<string>> Handle(AccessToken request, CancellationToken cancellationToken)
+		public async Task<Result<string>> Handle(GetAccessToken request, CancellationToken cancellationToken)
 		{
 			if (request == null || string.IsNullOrEmpty(request.Token) || request.UserId == 0)
 				return await Result<string>.FailureAsync("Missing refresh token details");
