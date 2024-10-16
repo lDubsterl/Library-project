@@ -2,6 +2,7 @@
 using Library.Application.Features.Authentication;
 using Library.Shared.Results;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.WebAPI.Controllers
@@ -30,15 +31,21 @@ namespace Library.WebAPI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<Result<string>> GetNewAccessToken(AccessToken request)
+		public async Task<Result<string>> GetNewAccessToken(GetAccessToken request)
 		{
 			return await _mediator.Send(request);
 		}
 
-		[HttpGet]
+		[HttpPost]
 		public async Task<Result<bool>> LogOut()
 		{
 			return await _mediator.Send(new LogOutRequest(UserId));
+		}
+
+		[HttpGet, Authorize]
+		public bool Verify()
+		{
+			return true;
 		}
 	}
 }
