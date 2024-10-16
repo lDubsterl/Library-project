@@ -48,7 +48,7 @@ namespace Library.WebAPI
 
 			builder.Services.AddAuthorizationBuilder()
 				.AddPolicy("AdminsOnly", policy =>
-			policy.RequireRole("Admin"));
+			policy.RequireRole("admin"));
 
 			builder.Services.AddCors(options =>
 			{
@@ -60,6 +60,7 @@ namespace Library.WebAPI
 			});
 
 			var app = builder.Build();
+			Directory.CreateDirectory($"{app.Configuration["FrontendPublicFolder"]}/BookImages");
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
