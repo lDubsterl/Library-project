@@ -22,7 +22,7 @@ namespace Library.Infrastructure.Services
 			var userRecord = await _db.Users.Include(t => t.RefreshTokens).SingleAsync(u => u.Id == userId);
 			
 			if (userRecord == null)
-				return null;
+				return "";
 
 			var accessToken = await TokenBuilder.GenerateAccessToken(userId, userRecord.Role);
 			return accessToken;
@@ -33,7 +33,7 @@ namespace Library.Infrastructure.Services
 			var userRecord = await _db.Users.Include(t => t.RefreshTokens).SingleAsync(u => u.Id == userId);
 
 			if (userRecord == null)
-				return null;
+				return new Tokens();
 
 			var accessToken = await TokenBuilder.GenerateAccessToken(userId, userRecord.Role);
 			var refreshToken = await TokenBuilder.GenerateRefreshToken();
