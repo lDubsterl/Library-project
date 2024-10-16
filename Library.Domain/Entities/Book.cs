@@ -9,5 +9,6 @@ namespace Library.Domain.Entities
 		public int Id { get; set; }
 		public int AuthorId { get; set; }
 		public required Author Author { get; set; }
+		public string PathToImage { get; set; } = string.Empty;
 	}
 }
