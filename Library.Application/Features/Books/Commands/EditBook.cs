@@ -1,42 +1,43 @@
 ﻿using AutoMapper;
 using Library.Application.Common.Mappings;
 using Library.Application.Common.Validators;
-using Library.Application.DTOs;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Common;
 using Library.Domain.Entities;
-using Library.Shared.Results;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Application.Features.Books.Commands
 {
-	public class EditBookCommand : BaseBook, IRequest<Result<int>>, IMapTo<Book>, IToValidate
+	public class EditBookCommand : BaseBook, IRequest<IActionResult>, IMapTo<Book>, IToValidate
 	{
-		public int Id { get; set; }
 		public int AuthorId { get; set; }
-		public AuthorDTO Author { get; set; }
 	}
-	public class EditBookHandler : IRequestHandler<EditBookCommand, Result<int>>
+	public class EditBookHandler : IRequestHandler<EditBookCommand, IActionResult>
 	{
 		private IUnitOfWork _unitOfWork;
-		private IMapper _mapper;
 		public EditBookHandler(IUnitOfWork unitOfWork, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
-			_mapper = mapper;
 		}
 
-		public async Task<Result<int>> Handle(EditBookCommand request, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(EditBookCommand request, CancellationToken cancellationToken)
 		{
-			var book = _mapper.Map<Book>(request);
-			var bookFromDb = await _unitOfWork.Repository<Book>().GetByIdAsync(request.Id);
+			var bookFromDb = await _unitOfWork.Repository<Book>().Entities.FirstOrDefaultAsync(b => b.ISBN == request.ISBN);
 
 			if (bookFromDb is null)
-				return await Result<int>.FailureAsync("Book not found");
+				return new BadRequestObjectResult(new { Message = "Book not found" });
 
-			await _unitOfWork.Repository<Book>().UpdateAsync(book);
+			bookFromDb.Title = request.Title;
+			bookFromDb.Genre = request.Genre;
+			bookFromDb.Description = request.Description;
+			bookFromDb.Author = await _unitOfWork.Repository<Author>().GetByIdAsync(request.AuthorId);
+
+			await _unitOfWork.Repository<Book>().UpdateAsync(bookFromDb);
 			await _unitOfWork.Save();
-			return await Result<int>.SuccessAsync($"{book.Title} was updated successfully");
+
+			return new OkObjectResult(new { Message = $"{request.Title} was updated successfully" });
 		}
 	}
 }

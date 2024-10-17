@@ -2,12 +2,12 @@
 using Library.Application.Interfaces.Services;
 using Library.Domain.Entities;
 using Library.Persistence.Contexts;
-using Library.Shared.Results;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Infrastructure.Services
 {
-    public class AuthenticationService : IAuthenticationService
+	public class AuthenticationService : IAuthenticationService
 	{
 		private readonly LibraryDbContext _db;
 		private readonly ITokenService tokenService;
@@ -18,33 +18,33 @@ namespace Library.Infrastructure.Services
 			this.tokenService = tokenService;
 		}
 
-		public async Task<Result<Tokens>> LoginAsync(Login loginRequest)
+		public async Task<IActionResult> LoginAsync(Login loginRequest)
 		{
 			var user = _db.Users.SingleOrDefault(user => user.Email == loginRequest.Email);
 
 			if (user == null)
 			{
-				return await Result<Tokens>.FailureAsync("Email not found");
+				return new BadRequestObjectResult(new { Message = "Email not found" });
 			}
 			var passwordHash = PasswordBuilder.HashUsingPbkdf2(loginRequest.Password, Convert.FromBase64String(user.PasswordSalt));
 
 			if (user.Password != passwordHash)
 			{
-				return await Result<Tokens>.FailureAsync("Invalid password");
+				return new BadRequestObjectResult(new { Message = "Invalid password" });
 			}
 
 			var token = await Task.Run(() => tokenService.GenerateTokensAsync(user.Id));
 
-			return await Result<Tokens>.SuccessAsync(token!, "Tokens were got successfully");
+			return new OkObjectResult(new { data = token, Message = "Tokens got successfully" });
 		}
 
-		public async Task<Result<bool>> LogoutAsync(int userId)
+		public async Task<IActionResult> LogoutAsync(int userId)
 		{
 			var refreshToken = await _db.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == userId);
 
 			if (refreshToken == null)
 			{
-				return await Result<bool>.SuccessAsync();
+				return new OkResult();
 			}
 
 			_db.RefreshTokens.Remove(refreshToken);
@@ -53,30 +53,30 @@ namespace Library.Infrastructure.Services
 
 			if (saveResponse >= 0)
 			{
-				return await Result<bool>.SuccessAsync();
+				return new OkResult();
 			}
 
-			return Result<bool>.Failure("Unable to logout user");
+			return new BadRequestObjectResult(new { Message = "Unable to logout user" });
 
 		}
 
-		public async Task<Result<string>> SignUpAsync(SignUp signupRequest)
+		public async Task<IActionResult> SignUpAsync(SignUp signupRequest)
 		{
 			var existingUser = await _db.Users.SingleOrDefaultAsync(user => user.Email == signupRequest.Email);
 
 			if (existingUser != null)
 			{
-				return await Result<string>.FailureAsync("User with the same email already exists");
+				return new BadRequestObjectResult(new { Message = "User with the same email already exists" });
 			}
 
 			if (signupRequest.Password != signupRequest.ConfirmPassword)
 			{
-				return await Result<string>.FailureAsync("Password and confirm password do not match");
+				return new BadRequestObjectResult(new { Message = "Password and confirm password do not match" });
 			}
 
 			if (signupRequest.Password.Length <= 7)
 			{
-				return await Result<string>.FailureAsync("Password is weak");
+				return new BadRequestObjectResult(new { Message = "Password is weak" });
 			}
 
 			var salt = PasswordBuilder.GetSecureSalt();
@@ -97,9 +97,10 @@ namespace Library.Infrastructure.Services
 
 			if (saveResponse >= 0)
 			{
-				return await Result<string>.SuccessAsync(user.Email, "Registered successfully");
+				return new OkObjectResult(new { data = user.Email, Message = $"{user.Email} Registered successfully" });
 			}
-			return await Result<string>.FailureAsync("Unable to save the user");
+
+			return new BadRequestObjectResult(new { Message = "Unable to save the user" });
 		}
 	}
 }

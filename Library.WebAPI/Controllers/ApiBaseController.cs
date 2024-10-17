@@ -7,6 +7,7 @@ namespace Library.WebAPI.Controllers
 	public class ApiBaseController : ControllerBase
 	{
 		protected int UserId => int.Parse(FindClaim(ClaimTypes.NameIdentifier));
+		protected string? Role => FindClaim(ClaimTypes.Role);
 		string? FindClaim(string claimName)
 		{
 			var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;

@@ -8,6 +8,7 @@ namespace Library.Domain.Common
 		public required string Title { get; set; }
 		public required string Genre { get; set; }
 		public required string Description { get; set; }
+		public bool IsOccupied { get; set; } = false;
 		public override bool Equals(object obj)
 		{
 			if (obj is not BaseBook otherBook) return false;

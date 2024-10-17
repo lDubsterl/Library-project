@@ -1,13 +1,11 @@
 ﻿using Library.Application.AuthenticationRequests;
 using Library.Application.Features.Authentication;
-using Library.Shared.Results;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.WebAPI.Controllers
 {
-    [Route("api/[controller]/[action]")]
+	[Route("api/[controller]/[action]")]
 	[ApiController]
 	public class AuthenticationController : ApiBaseController
 	{
@@ -19,33 +17,35 @@ namespace Library.WebAPI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<Result<Tokens>> LogIn(Login request)
+		public async Task<IActionResult> LogIn(Login request)
 		{
 			return await _mediator.Send(request);
 		}
 
 		[HttpPost]
-		public async Task<Result<string>> SignUp(SignUp request)
+		public async Task<IActionResult> SignUp(SignUp request)
 		{
 			return await _mediator.Send(request);
 		}
 
 		[HttpPost]
-		public async Task<Result<string>> GetNewAccessToken(GetAccessToken request)
+		public async Task<IActionResult> GetNewAccessToken(GetAccessToken request)
 		{
 			return await _mediator.Send(request);
 		}
 
 		[HttpPost]
-		public async Task<Result<bool>> LogOut()
+		public async Task<IActionResult> LogOut()
 		{
 			return await _mediator.Send(new LogOutRequest(UserId));
 		}
 
-		[HttpGet, Authorize]
-		public bool Verify()
+		[HttpGet]
+		public IActionResult Verify()
 		{
-			return true;
+			if (HttpContext!.User!.Identity!.IsAuthenticated)
+				return Ok(Role == "admin");
+			return Unauthorized();
 		}
 	}
 }

@@ -4,16 +4,15 @@ using Library.Application.Common.Validators;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Common;
 using Library.Domain.Entities;
-using Library.Shared.Results;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Features.Authors.Commands
 {
-	public class EditAuthorCommand : BaseAuthor, IRequest<Result<int>>, IMapTo<Author>, IToValidate
+	public class EditAuthorCommand : BaseAuthor, IRequest<IActionResult>, IMapTo<Author>, IToValidate
 	{
-		public int Id { get; set; }
 	}
-	public class EditAuthorHandler : IRequestHandler<EditAuthorCommand, Result<int>>
+	public class EditAuthorHandler : IRequestHandler<EditAuthorCommand, IActionResult>
 	{
 		private IUnitOfWork _unitOfWork;
 		private IMapper _mapper;
@@ -23,16 +22,17 @@ namespace Library.Application.Features.Authors.Commands
 			_mapper = mapper;
 		}
 
-		public async Task<Result<int>> Handle(EditAuthorCommand request, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(EditAuthorCommand request, CancellationToken cancellationToken)
 		{
 			var author = await _unitOfWork.Repository<Author>().GetByIdAsync(request.Id);
 			if (author is null)
-				return await Result<int>.FailureAsync("Author not found");
+				return new BadRequestObjectResult(new { Message = "Author not found" });
 
 			var newAuthor = _mapper.Map<Author>(request);
 			await _unitOfWork.Repository<Author>().UpdateAsync(newAuthor);
 			await _unitOfWork.Save();
-			return await Result<int>.SuccessAsync(request.Id, $"{newAuthor.Name} {newAuthor.Surname} was updated successfully");
+
+			return new OkObjectResult(new { data = request.Id, Message = $"{newAuthor.Name} {newAuthor.Surname} was updated successfully" });
 		}
 	}
 }

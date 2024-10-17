@@ -1,19 +1,19 @@
-﻿using Library.Application.Interfaces.Services;
-using Library.Shared.Results;
+﻿using Library.Application.AuthenticationRequests;
+using Library.Application.Interfaces.Services;
 using MediatR;
-using Library.Application.AuthenticationRequests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Features.Authentication
 {
 
-    public class LoginHandler : IRequestHandler<Login, Result<Tokens>>
+	public class LoginHandler : IRequestHandler<Login, IActionResult>
 	{
 		IAuthenticationService _service;
 		public LoginHandler(IAuthenticationService service)
 		{
 			_service = service;
 		}
-		public async Task<Result<Tokens>> Handle(Login request, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(Login request, CancellationToken cancellationToken)
 		{
 			return await _service.LoginAsync(request);
 		}

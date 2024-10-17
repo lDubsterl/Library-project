@@ -1,11 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using FluentValidation;
-using MediatR;
-using Library.Domain.Common;
-using Library.Application.Features.Authors.Commands;
+﻿using FluentValidation;
 using Library.Application.Common.Validators;
-using Library.Shared.Results;
+using Library.Domain.Common;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Library.Application.Extensions
 {

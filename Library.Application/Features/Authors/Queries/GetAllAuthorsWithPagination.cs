@@ -4,22 +4,17 @@ using Library.Application.Extensions;
 using Library.Application.DTOs;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
-using Library.Shared.Results;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Library.Application.Common.BaseClasses;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Features.Authors.Queries
 {
-    public class GetAllAuthorsWithPagination : PaginationBase, IRequest<PaginatedResult<AuthorDTO>>
+    public class GetAllAuthorsWithPagination : PaginationBase, IRequest<IActionResult>
 	{
 	}
 
-	public class GetAllAuthorsWithPaginationHandler : IRequestHandler<GetAllAuthorsWithPagination, PaginatedResult<AuthorDTO>>
+	public class GetAllAuthorsWithPaginationHandler : IRequestHandler<GetAllAuthorsWithPagination, IActionResult>
 	{
 		IUnitOfWork _unitOfWork;
 		IMapper _mapper;
@@ -30,7 +25,7 @@ namespace Library.Application.Features.Authors.Queries
 			_mapper = mapper;
 		}
 
-		public async Task<PaginatedResult<AuthorDTO>> Handle(GetAllAuthorsWithPagination request, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(GetAllAuthorsWithPagination request, CancellationToken cancellationToken)
 		{
 			return await _unitOfWork.Repository<Author>().Entities
 				.ProjectTo<AuthorDTO>(_mapper.ConfigurationProvider)

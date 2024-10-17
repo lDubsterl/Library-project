@@ -1,0 +1,26 @@
+ h1 {
+   text-align: center;
+   color: #333;
+ }
+
+ .search-filter-container {
+   display: flex;
+   justify-content: center;
+   margin-bottom: 1.5rem;
+ }
+
+ .search-filter-container input {
+   margin: 0 0.5rem;
+   padding: 0.5rem;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   width: 200px;
+ }
+
+ .image {
+   width: 100px;
+   height: 100px;
+   object-fit: fill;
+   margin-right: 1rem;
+   align-self: center;
+ }

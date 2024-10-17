@@ -1,11 +1,12 @@
-﻿using Library.Application.Interfaces.Services;
-using Library.Shared.Results;
+﻿using Library.Application.AuthenticationRequests;
+using Library.Application.Interfaces.Services;
+using Library.Domain.Entities;
 using MediatR;
-using Library.Application.AuthenticationRequests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Features.Authentication
 {
-    public class SignUpHandler: IRequestHandler<SignUp, Result<string>>
+	public class SignUpHandler: IRequestHandler<SignUp, IActionResult>
 	{
 		IAuthenticationService _service;
 
@@ -14,16 +15,16 @@ namespace Library.Application.Features.Authentication
 			_service = service;
 		}
 
-		public async Task<Result<string>> Handle(SignUp request, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(SignUp request, CancellationToken cancellationToken)
 		{
 			var signupResponse = await _service.SignUpAsync(request);
 
-			if (!signupResponse.Succeeded)
+			if (signupResponse is BadRequestObjectResult fail)
 			{
-				return await Result<string>.FailureAsync(signupResponse.Messages);
+				return fail;
 			}
 
-			return await Result<string>.SuccessAsync(request.Email);
+			return new OkResult();
 		}
 	}
 }

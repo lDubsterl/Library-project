@@ -16,5 +16,6 @@ namespace Library.Domain.Entities
 		public string PasswordSalt { get; set; }
 		public DateTime Ts {  get; set; }
 		public List<RefreshToken> RefreshTokens { get; set; }
+		public List<UserBook> UserBooks { get; set; }
 	}
 }

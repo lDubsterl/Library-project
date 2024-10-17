@@ -1,13 +1,13 @@
-﻿using Library.Application.DTOs;
+﻿using Library.Application.AuthenticationRequests;
+using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
-using Library.Shared.Results;
 using MediatR;
-using Library.Application.AuthenticationRequests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Features.Authentication
 {
-    public class RefreshToken : TokenDTO, IRequest<Result<Tokens>> { }
-	public class RefreshTokenHandler : IRequestHandler<RefreshToken, Result<Tokens>>
+	public class RefreshToken : TokenDTO, IRequest<IActionResult> { }
+	public class RefreshTokenHandler : IRequestHandler<RefreshToken, IActionResult>
 	{
 		ITokenService _service;
 
@@ -16,19 +16,20 @@ namespace Library.Application.Features.Authentication
 			this._service = tokenService;
 		}
 
-		public async Task<Result<Tokens>> Handle(RefreshToken request, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(RefreshToken request, CancellationToken cancellationToken)
 		{
 			if (request == null || string.IsNullOrEmpty(request.Token) || request.UserId == 0)
-				return await Result<Tokens>.FailureAsync("Missing refresh token details");
+				return new BadRequestObjectResult(new { Message = "Missing refresh token details" });
 
 			var validateRefreshTokenResponse = await _service.ValidateRefreshTokenAsync(request);
 
-			if (!validateRefreshTokenResponse.Succeeded)
-				return await Result<Tokens>.FailureAsync(validateRefreshTokenResponse.Messages);
+			if (validateRefreshTokenResponse is BadRequestResult fail)
+				return fail;
 
-			var tokenResponse = await _service.GenerateTokensAsync(validateRefreshTokenResponse.Data);
+			var userId = (int)validateRefreshTokenResponse;
+			var tokenResponse = await _service.GenerateTokensAsync(userId);
 
-			return await Result<Tokens>.SuccessAsync(tokenResponse, "Tokens were refreshed successfully");
+			return new OkObjectResult(new { Data = tokenResponse, Message = "Tokens were refreshed successfully" });
 		}
 	}
 }

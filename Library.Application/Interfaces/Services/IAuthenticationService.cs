@@ -1,12 +1,12 @@
-﻿using Library.Shared.Results;
-using Library.Application.AuthenticationRequests;
+﻿using Library.Application.AuthenticationRequests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Interfaces.Services
 {
-    public interface IAuthenticationService
+	public interface IAuthenticationService
 	{
-		Task<Result<Tokens>> LoginAsync(Login request);
-		Task<Result<string>> SignUpAsync(SignUp request);
-		Task<Result<bool>> LogoutAsync(int userId);
+		Task<IActionResult> LoginAsync(Login request);
+		Task<IActionResult> SignUpAsync(SignUp request);
+		Task<IActionResult> LogoutAsync(int userId);
 	}
 }

@@ -10,5 +10,6 @@ namespace Library.Domain.Entities
 		public int AuthorId { get; set; }
 		public required Author Author { get; set; }
 		public string PathToImage { get; set; } = string.Empty;
+		public List<UserBook> UserBooks { get; set; }
 	}
 }

@@ -2,17 +2,17 @@
 using Library.Application.DTOs;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
-using Library.Shared.Results;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Features.Books.Queries
 {
-    public class GetBookById : IRequest<Result<BookDTO>>
+	public class GetBookById : IRequest<IActionResult>
 	{
 		public int Id { get; set; }
 	}
 
-	public class GetBookByIdHandler : IRequestHandler<GetBookById, Result<BookDTO>>
+	public class GetBookByIdHandler : IRequestHandler<GetBookById, IActionResult>
 	{
 		IUnitOfWork _unitOfWork;
 		IMapper _mapper;
@@ -23,12 +23,12 @@ namespace Library.Application.Features.Books.Queries
 			_mapper = mapper;
 		}
 
-		public async Task<Result<BookDTO>> Handle(GetBookById query, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(GetBookById query, CancellationToken cancellationToken)
 		{
 			var book = await _unitOfWork.Repository<Book>()
 				.GetByIdAsync(query.Id);
 			var mappedBook = _mapper.Map<BookDTO>(book);
-			return await Result<BookDTO>.SuccessAsync(mappedBook!);
+			return new OkObjectResult(new { Data = mappedBook });
 		}
 	}
 }

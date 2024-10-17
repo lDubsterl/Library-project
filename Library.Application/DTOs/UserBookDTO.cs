@@ -6,9 +6,10 @@ using MediatR;
 
 namespace Library.Application.DTOs
 {
-	public class UserBookDTO: BaseBook, IMapFrom<UserBook>
+	public class UserBookDTO:  IMapFrom<UserBook>
 	{
-		public DateTime IssueDate { get; set; }
-		public DateTime RefundDate { get; set; }
+		public BookDTO Book { get; set; }
+		public DateOnly IssueDate { get; set; }
+		public DateOnly RefundDate { get; set; }
 	}
 }

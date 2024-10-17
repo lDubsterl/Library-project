@@ -1,4 +1,4 @@
-﻿using Library.Shared.Results;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,12 +10,12 @@ namespace Library.Application.Extensions
 {
 	public static class QueryableExtensions
 	{
-		public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int pageNumber = 1, int pageSize = 10) where T : class
+		public static async Task<IActionResult> ToPaginatedListAsync<T>(this IQueryable<T> source, int pageNumber = 1, int pageSize = 10) where T : class
 		{
 			int count = await source.CountAsync();
 			pageNumber = pageNumber <= 0 ? 1 : pageNumber;
 			List<T> items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-			return PaginatedResult<T>.Create(items, count, pageNumber, pageSize);
+			return new OkObjectResult(new { data = items, count, pageNumber, pageSize });
 		}
 	}
 }

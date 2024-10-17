@@ -1,9 +1,9 @@
-﻿using Library.Shared.Results;
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.AuthenticationRequests
 {
-    public class SignUp : IRequest<Result<string>>
+	public class SignUp : IRequest<IActionResult>
     {
         public string Email { get; set; }
         public string Password { get; set; }

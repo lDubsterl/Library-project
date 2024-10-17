@@ -2,12 +2,12 @@
 using Library.Application.DTOs;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
-using Library.Shared.Results;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Features.Authors.Queries
 {
-    public class GetAuthorById : IRequest<Result<AuthorDTO>>
+	public class GetAuthorById : IRequest<IActionResult>
 	{
 		public GetAuthorById(int id)
 		{
@@ -16,7 +16,7 @@ namespace Library.Application.Features.Authors.Queries
 		public int Id { get; set; }
 	}
 
-	public class GetAuthorByIdHandler : IRequestHandler<GetAuthorById, Result<AuthorDTO>>
+	public class GetAuthorByIdHandler : IRequestHandler<GetAuthorById, IActionResult>
 	{
 		IUnitOfWork _unitOfWork;
 		IMapper _mapper;
@@ -27,11 +27,12 @@ namespace Library.Application.Features.Authors.Queries
 			_mapper = mapper;
 		}
 
-		public async Task<Result<AuthorDTO>> Handle(GetAuthorById query, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(GetAuthorById query, CancellationToken cancellationToken)
 		{
 			var author = await _unitOfWork.Repository<Author>().GetByIdAsync(query.Id);
 			var mappedAuthor = _mapper.Map<AuthorDTO>(author);
-			return await Result<AuthorDTO>.SuccessAsync(mappedAuthor);
+
+			return new OkObjectResult(new { data = mappedAuthor });
 		}
 	}
 }

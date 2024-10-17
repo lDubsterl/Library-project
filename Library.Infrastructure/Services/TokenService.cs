@@ -3,7 +3,7 @@ using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
 using Library.Domain.Entities;
 using Library.Persistence.Contexts;
-using Library.Shared.Results;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Infrastructure.Services
@@ -83,22 +83,22 @@ namespace Library.Infrastructure.Services
 			return false;
 		}
 
-		public async Task<Result<int>> ValidateRefreshTokenAsync(TokenDTO refreshTokenRequest)
+		public async Task<object> ValidateRefreshTokenAsync(TokenDTO refreshTokenRequest)
 		{
 			var refreshToken = await _db.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == refreshTokenRequest.UserId);
 
 			if (refreshToken == null)
-				return await Result<int>.FailureAsync("Invalid session or user is already logged out");
+				return new BadRequestObjectResult(new { Message = "Invalid session or user is already logged out" });
 
 			var refreshTokenToValidateHash = PasswordBuilder.HashUsingPbkdf2(refreshTokenRequest.Token, Convert.FromBase64String(refreshToken.TokenSalt));
 
 			if (refreshToken.TokenHash != refreshTokenToValidateHash)
-				return await Result<int>.FailureAsync("Invalid refresh token");
+				return new BadRequestObjectResult(new { Message = "Invalid refresh token" });
 
 			if (refreshToken.ExpiryDate < DateTime.UtcNow)
-				return await Result<int>.FailureAsync("Refresh token has expired");
+				return new BadRequestObjectResult(new { Message = "Refresh token has expired" });
 
-			return await Result<int>.SuccessAsync(refreshToken.UserId);
+			return refreshToken.UserId;
 		}
 	}
 }

@@ -5,15 +5,15 @@ using Library.Application.DTOs;
 using Library.Application.Extensions;
 using Library.Application.Interfaces.Repositories;
 using Library.Domain.Entities;
-using Library.Shared.Results;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Application.Features.Books.Queries
 {
-    public class GetAllBooksWithPagination : PaginationBase, IRequest<PaginatedResult<BookDTO>>
+    public class GetAllBooksWithPagination : PaginationBase, IRequest<IActionResult>
 	{
 	}
-	public class GetAllBooksHandler : IRequestHandler<GetAllBooksWithPagination, PaginatedResult<BookDTO>>
+	public class GetAllBooksHandler : IRequestHandler<GetAllBooksWithPagination, IActionResult>
 	{
 		readonly IUnitOfWork _unitOfWork;
 		readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Library.Application.Features.Books.Queries
 			_mapper = mapper;
 		}
 
-		public async Task<PaginatedResult<BookDTO>> Handle(GetAllBooksWithPagination query, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(GetAllBooksWithPagination query, CancellationToken cancellationToken)
 		{
 			return await _unitOfWork.Repository<Book>().Entities
 				.ProjectTo<BookDTO>(_mapper.ConfigurationProvider)

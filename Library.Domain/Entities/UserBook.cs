@@ -9,7 +9,7 @@ namespace Library.Domain.Entities
 		public User User { get; set; }
 		public int BookId { get; set; }
 		public Book Book { get; set; }
-		public DateTime IssueDate { get; set; }
-		public DateTime RefundDate { get; set; }
+		public DateOnly IssueDate { get; set; }
+		public DateOnly RefundDate { get; set; }
 	}
 }

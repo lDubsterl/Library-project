@@ -1,36 +1,34 @@
 ﻿using AutoMapper;
-using Library.Application.Common.Mappings;
 using Library.Application.Interfaces.Repositories;
-using Library.Domain.Common;
 using Library.Domain.Entities;
-using Library.Shared.Results;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Application.Features.Books.Commands
 {
-	public class DeleteBookCommand : IRequest<Result<int>>, IMapTo<Book>
+	public class DeleteBookCommand : IRequest<IActionResult>
 	{
-		public int Id { get; set; }
+		public string ISBN { get; set; }
 	}
-	public class DeleteBookHandler : IRequestHandler<DeleteBookCommand, Result<int>>
+	public class DeleteBookHandler : IRequestHandler<DeleteBookCommand, IActionResult>
 	{
 		private IUnitOfWork _unitOfWork;
-		private IMapper _mapper;
 		public DeleteBookHandler(IUnitOfWork unitOfWork, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
-			_mapper = mapper;
 		}
 
-		public async Task<Result<int>> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
+		public async Task<IActionResult> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
 		{
-			var bookFromDb = await _unitOfWork.Repository<Book>().GetByIdAsync(request.Id);
+			var bookFromDb = await _unitOfWork.Repository<Book>().Entities.FirstOrDefaultAsync(b => request.ISBN == b.ISBN);
 			if (bookFromDb is null)
-				return await Result<int>.FailureAsync("Book doesn't exist");
+				return new BadRequestObjectResult(new { Message = "Book doesn't exist" });
 
 			await _unitOfWork.Repository<Book>().DeleteAsync(bookFromDb);
 			await _unitOfWork.Save();
-			return await Result<int>.SuccessAsync(request.Id, $"{bookFromDb.Title} was deleted successfully");
+
+			return new OkObjectResult(new { data = request.ISBN, Message = $"{bookFromDb.Title} was deleted successfully" });
 		}
 	}
 }
