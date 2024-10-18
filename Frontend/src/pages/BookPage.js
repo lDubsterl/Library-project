@@ -51,8 +51,7 @@ const BookPage = ({ isAuthenticated, isAdmin }) => {
 	};
 
 	const handleTakeBook = (book) => {
-		let userId = localStorage.getItem('userId');
-		api.post("Books/TakeBook", { userId, bookISBN: book.isbn, authorId: book.author.id })
+		api.post("User/TakeBook", { bookISBN: book.isbn, authorId: book.author.id })
 		.then(response => {
 			alert(response.data.message);
 		});

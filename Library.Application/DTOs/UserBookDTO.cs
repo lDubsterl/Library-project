@@ -8,6 +8,7 @@ namespace Library.Application.DTOs
 {
 	public class UserBookDTO:  IMapFrom<UserBook>
 	{
+		public int Id { get; set; }
 		public BookDTO Book { get; set; }
 		public DateOnly IssueDate { get; set; }
 		public DateOnly RefundDate { get; set; }

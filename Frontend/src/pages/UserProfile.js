@@ -16,7 +16,7 @@ const UserProfile = () => {
 	const booksPerPage = 5;
 
 	useEffect(() => {
-		api.get(`Books/GetUserBooks?Id=${localStorage.getItem('userId')}&PageNumber=${currentPage}&PageSize=${booksPerPage}`)
+		api.get(`User/GetUserBooks?PageNumber=${currentPage}&PageSize=${booksPerPage}`)
 			.then(response => {
 				setUserBooks(response.data.data);
 				setTotalPages(response.data.totalPages);
@@ -41,19 +41,25 @@ const UserProfile = () => {
 	};
 
 	const handleBookClick = (book) => {
-		navigate(`/book/${book.isbn}`, { state: { isbn: book.isbn } });
+		navigate(`/book/${book.book.isbn}`, { state: { isbn: book.book.isbn } });
 	};
 
 	const handleExtend = (bookId) => {
-		// Логика для продления книги
-		console.log(`Продлить книгу с ID: ${bookId}`);
-		// Здесь можно выполнить запрос на сервер для продления книги
+		api.patch("User/ExtendBookUsage", {BookId: bookId})
+		.then(response => {
+			alert(response.data.message);
+			navigate(0);
+		})
+		.cath(() => alert("Book extending error"));
 	};
 
 	const handleReturn = (bookId) => {
-		// Логика для возврата книги
-		console.log(`Вернуть книгу с ID: ${bookId}`);
-		// Здесь можно выполнить запрос на сервер для возврата книги
+		api.delete(`User/ReturnBook?bookId=${bookId}`)
+		.then(response => {
+			alert(response.data.message);
+			navigate(0);
+		})
+		.catch(() => alert("Book return error"));
 	};
 
 	return (
@@ -78,8 +84,8 @@ const UserProfile = () => {
 
 							{/* Блок с кнопками справа */}
 							<div className={buttons['admin-actions']} style={{flexDirection: "column", marginLeft: "auto", alignSelf: "center"}}>
-								<button onClick={() => handleExtend(userBook.book.id)}>Продлить</button>
-								<button onClick={() => handleReturn(userBook.book.id)}>Вернуть</button>
+								<button onClick={() => handleExtend(userBook.id)}>Продлить</button>
+								<button onClick={() => handleReturn(userBook.id)}>Вернуть</button>
 							</div>
 						</div>
 					</div>

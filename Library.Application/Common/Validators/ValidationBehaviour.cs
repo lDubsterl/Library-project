@@ -32,7 +32,7 @@ namespace Library.Application.Common.Validators
             ValidationResult[] validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
             List<ValidationFailure> failures = validationResults.SelectMany(r => r.Errors).Where(e => e != null).ToList();
 
-            if (!failures.Any())
+            if (failures.Count == 0)
                 return await next();
 
             throw new ValidationException(failures);

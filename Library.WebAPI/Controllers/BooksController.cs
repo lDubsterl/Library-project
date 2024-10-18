@@ -4,10 +4,11 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Library.Application.Features.Books.Commands;
+using Library.Application.Features.User.Queries;
 
 namespace Library.WebAPI.Controllers
 {
-	[Route("api/[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
 	[ApiController]
 	public class BooksController : ApiBaseController
 	{
@@ -35,12 +36,6 @@ namespace Library.WebAPI.Controllers
 			return await _mediator.Send(query);
 		}
 
-		[HttpGet, Authorize]
-		public async Task<IActionResult> GetUserBooks([FromQuery] GetUserBooksWithPagination query)
-		{
-			return await _mediator.Send(query);
-		}
-
 		[HttpPost, Authorize(Policy = "AdminsOnly")]
 		public async Task<IActionResult> AddBook(AddBookCommand query)
 		{
@@ -61,12 +56,6 @@ namespace Library.WebAPI.Controllers
 
 		[HttpDelete, Authorize(Policy = "AdminsOnly")]
 		public async Task<IActionResult> DeleteBook([FromQuery]DeleteBookCommand query)
-		{
-			return await _mediator.Send(query);
-		}
-
-		[HttpPost, Authorize]
-		public async Task<IActionResult> TakeBook(AddBookToUser query)
 		{
 			return await _mediator.Send(query);
 		}

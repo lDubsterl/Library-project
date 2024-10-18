@@ -9,12 +9,12 @@ using Library.Application.Common.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace Library.Application.Features.Books.Commands
 {
 	public class AddBookCommand : BaseBook, IRequest<IActionResult>, IMapTo<Book>, IMapTo<BookDTO>, IToValidate
 	{
-		public int AuthorId { get; set; }
 		public IFormFile Image { get; set; } = null;
 	}
 	public class AddBookHandler : IRequestHandler<AddBookCommand, IActionResult>
@@ -34,9 +34,9 @@ namespace Library.Application.Features.Books.Commands
 
 			if (author == null)
 				return new BadRequestObjectResult(new { Message = "Author not found" });
-
+			var regex = new Regex("^(?=(?:[^0-9]*[0-9]){10}(?:(?:[^0-9]*[0-9]){3})?$)[\\d-]+$");
 			var isBookExists = _unitOfWork.Repository<Book>().Entities
-				.Any(b => b.ISBN == request.ISBN);
+				.Any(b => regex.IsMatch(b.ISBN) == regex.IsMatch(request.ISBN));
 
 			if (isBookExists)
 				return new BadRequestObjectResult(new { Message = "Book with this ISBN already exists" });
