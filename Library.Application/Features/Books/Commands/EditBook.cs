@@ -12,7 +12,6 @@ namespace Library.Application.Features.Books.Commands
 {
 	public class EditBookCommand : BaseBook, IRequest<IActionResult>, IMapTo<Book>, IToValidate
 	{
-		public int AuthorId { get; set; }
 	}
 	public class EditBookHandler : IRequestHandler<EditBookCommand, IActionResult>
 	{

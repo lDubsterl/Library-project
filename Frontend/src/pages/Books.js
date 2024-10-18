@@ -78,12 +78,14 @@ const Books = ({ isAdmin }) => {
 				navigate(0); // Обновляем страницу для отображения новой книги
 				alert("Book added successfully");
 			})
-			.catch((error) => {
+			.catch(error => {
 				let messages = '';
-				error.response.data.Errors.forEach(element => {
-					messages += element.Message + '\n';
-				});
-				alert('Failed to add book\n' + messages);
+				if (error.response.data.Errors) {
+					error.response.data.Errors.forEach(element => messages += element.Message + '\n');
+				}
+				else
+					messages = 'Some fields are incorrect';
+				alert('Failed to add book\n' + messages)
 			});
 	};
 
@@ -93,7 +95,7 @@ const Books = ({ isAdmin }) => {
 
 			{isAdmin && <div className={adminButtons['admin-actions']}>
 				<button onClick={() => setShowModal(true)}>Add a new book</button>
-				</div>}
+			</div>}
 
 			{/* Строка поиска */}
 			<div className={booksStyles['search-filter-container']}>

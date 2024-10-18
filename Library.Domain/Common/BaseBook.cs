@@ -4,11 +4,12 @@ namespace Library.Domain.Common
 {
 	public abstract class BaseBook
 	{
-		public required string ISBN { get; set; }
-		public required string Title { get; set; }
-		public required string Genre { get; set; }
-		public required string Description { get; set; }
+		public string ISBN { get; set; }
+		public string Title { get; set; }
+		public string Genre { get; set; }
+		public string Description { get; set; }
 		public bool IsOccupied { get; set; } = false;
+		public int AuthorId {  get; set; }
 		public override bool Equals(object obj)
 		{
 			if (obj is not BaseBook otherBook) return false;
